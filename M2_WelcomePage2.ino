@@ -70,6 +70,12 @@ void setup()
     }
   }
 
+  // Disable internal 5V pull-ups
+  pinMode(A4, INPUT);
+  pinMode(A5, INPUT);
+  digitalWrite(A4, LOW);
+  digitalWrite(A5, LOW);
+
   drawWelcomeScreen();
   delay(2500);
 
