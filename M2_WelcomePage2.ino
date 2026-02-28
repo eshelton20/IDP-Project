@@ -18,13 +18,13 @@ void drawWelcomeScreen()
   display.setTextColor(SSD1306_WHITE);
 
   display.setTextSize(1);
-  display.setCursor(0, 10);
+  display.setCursor(0, 8);
   display.println("Welcome to the");
 
-  display.setCursor(0, 22);
+  display.setCursor(0, 20);
   display.println("Home Audio System");
 
-  display.setCursor(0, 34);
+  display.setCursor(0, 32);
   display.println("Project");
 
   display.display();
