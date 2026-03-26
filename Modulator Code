@@ -1,0 +1,112 @@
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+//screen size
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+
+
+#define OLED_I2C_ADDRESS 0x3C
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+void drawWelcomeScreen()
+{
+  display.clearDisplay();
+  display.setTextColor(SSD1306_WHITE);
+
+  display.setTextSize(1);
+  display.setCursor(0, 8);
+  display.println("Welcome to the");
+
+  display.setCursor(0, 20);
+  display.println("Home Audio System");
+
+  display.setCursor(0, 32);
+  display.println("Project");
+
+  display.display();
+}
+
+void drawCreditsAtY(int yOffset)
+{
+  display.clearDisplay();
+  display.setTextColor(SSD1306_WHITE);
+
+  display.setTextSize(1);
+  display.setCursor(0, yOffset + 0);
+  display.println("Designed by");
+
+  display.setCursor(0, yOffset + 12);
+  display.println("Matt Tran");
+
+  display.setCursor(0, yOffset + 24);
+  display.println("Evan Shelton");
+
+  display.display();
+}
+
+void slideInCredits()
+{
+
+  for (int y = -24; y <= 20; y += 2)
+  {
+    drawCreditsAtY(y);
+    delay(25);
+  }
+}
+
+void setup() {
+  // put your setup code here, to run once:
+  //Serial.begin(115200);
+
+  //set pin 9 as output
+  DDRB |= (1 << PB1);
+
+  //clear time register
+  TCCR1A = 0;
+  TCCR1B = 0;
+
+  //set non inverting mode
+  TCCR1A |= (1 << COM1A1) | (0 << COM1A0);
+
+  //set fast mode PWM
+  TCCR1A |= (1 << WGM11);
+  TCCR1B |= (1 << WGM12) | (1<<WGM13);
+
+  //set prescalar
+  TCCR1B |= (1 << CS10);
+
+  //set top
+  ICR1 = 199;
+
+  //set trigger
+  OCR1A = 100;
+//remove later (was a back bracket)
+  if (!display.begin(SSD1306_SWITCHCAPVCC, OLED_I2C_ADDRESS))
+  {
+    Serial.println("SSD1306 init failed");
+    while (true)
+    {
+    }
+  }
+
+  // Disable internal 5V pull-ups
+  pinMode(A4, INPUT);
+  pinMode(A5, INPUT);
+  digitalWrite(A4, LOW);
+  digitalWrite(A5, LOW);
+
+  drawWelcomeScreen();
+  delay(2500);
+
+  slideInCredits();
+  delay(2000);
+}
+
+
+void loop()
+{
+}
